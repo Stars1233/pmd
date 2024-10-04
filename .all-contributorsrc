@@ -1929,7 +1929,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/1444125?v=4",
       "profile": "http://www.linkedin.com/in/chonton",
       "contributions": [
-        "bug"
+        "bug",
+        "code"
       ]
     },
     {
@@ -7705,6 +7706,116 @@
       "name": "RBRi",
       "avatar_url": "https://avatars.githubusercontent.com/u/2544132?v=4",
       "profile": "https://github.com/rbri",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "jbisotti",
+      "name": "Jamie Bisotti",
+      "avatar_url": "https://avatars.githubusercontent.com/u/899712?v=4",
+      "profile": "https://github.com/jbisotti",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "soloturn",
+      "name": "soloturn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/825568?v=4",
+      "profile": "https://github.com/soloturn",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "schosin",
+      "name": "schosin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1669777?v=4",
+      "profile": "https://github.com/schosin",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "AB-xdev",
+      "name": "Alex B",
+      "avatar_url": "https://avatars.githubusercontent.com/u/45384811?v=4",
+      "profile": "https://xdev.software/",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "dschach",
+      "name": "David Schach",
+      "avatar_url": "https://avatars.githubusercontent.com/u/636977?v=4",
+      "profile": "https://github.com/dschach",
+      "contributions": [
+        "bug",
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "vedantchokshi",
+      "name": "Vedant Chokshi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22137048?v=4",
+      "profile": "https://github.com/vedantchokshi",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "random1223",
+      "name": "Tony",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3987237?v=4",
+      "profile": "https://codety.io/",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "imax-erik",
+      "name": "imax-erik",
+      "avatar_url": "https://avatars.githubusercontent.com/u/62863607?v=4",
+      "profile": "https://github.com/imax-erik",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "lukasgraef",
+      "name": "Lukas Gräf",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48957581?v=4",
+      "profile": "https://github.com/lukasgraef",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "SaschaRiemer",
+      "name": "Sascha Riemer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/108794941?v=4",
+      "profile": "https://github.com/SaschaRiemer",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "kratoon",
+      "name": "Ondrej Kratochvil",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26163421?v=4",
+      "profile": "https://github.com/kratoon",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "mattr9124",
+      "name": "Matthew Rossner",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8940608?v=4",
+      "profile": "https://github.com/mattr9124",
       "contributions": [
         "bug"
       ]
