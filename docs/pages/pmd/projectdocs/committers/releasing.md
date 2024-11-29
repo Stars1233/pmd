@@ -99,48 +99,31 @@ Starting with PMD 7.5.0 we use Dependabot to update dependencies. Dependabot wil
 labeled with `dependencies`. When we merge such a pull request, we should assign it to the correct
 milestone. It is important, that the due date of the milestone is set correctly, otherwise the query won't find
 the milestone number.
-Then we can query which PRs have been merged and generate a section for the release notes:
+Then we can query which PRs have been merged and generate automatically a section for the release notes.
+This is done by the script `.ci/tools/release-notes-generate.sh`. It needs to be called with the
+LAST_VERSION and RELEASE_VERSION as parameters, e.g.
 
 ```shell
-NEW_VERSION=7.2.0
-MILESTONE_JSON=$(curl -s "https://api.github.com/repos/pmd/pmd/milestones?state=all&direction=desc&per_page=5"|jq ".[] | select(.title == \"$NEW_VERSION\")")
-MILESTONE=$(echo "$MILESTONE_JSON" | jq .number)
-
-# determine dependency updates
-DEPENDENCIES_JSON=$(curl -s "https://api.github.com/repos/pmd/pmd/issues?labels=dependencies&state=closed&direction=asc&per_page=50&page=1&milestone=${MILESTONE}")
-DEPENDENCIES_COUNT=$(echo "$DEPENDENCIES_JSON" | jq length)
-if [ $DEPENDENCIES_COUNT -gt 0 ]; then
-  echo "### 📦 Dependency updates"
-  echo "$DEPENDENCIES_JSON" | jq --raw-output '.[] | "* [#\(.number)](https://github.com/pmd/pmd/issues/\(.number)): \(.title)"'
-else
-  echo "### 📦 Dependency updates"
-  echo "No dependency updates"
-fi
+.ci/tool/release-notes-generate.sh 7.5.0 7.6.0
 ```
-This section needs to be added to the release notes at the end.
+
+This script will directly modify the file `docs/pages/release_notes.md`. It can be called multiple times
+without issues. However, there is active
+[rate limiting](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28)
+of the GitHub API, which might cause issues. If that happens, you need to set the env var `GITHUB_TOKEN` with
+your personal access token. The script will pick it up automatically.
+A fine-grained token with onl "Public Repositories (read-only)" access is enough.
 
 Starting with PMD 6.23.0 we'll provide small statistics for every release. This needs to be added
 to the release notes as the last section (after "Dependency updates"). To count the closed issues and pull requests, the milestone
 on GitHub with the title of the new release is searched. It is important, that the due date of the milestone
 is correctly set, as the returned milestones in the API call are sorted by due date.
-Make sure, there is such a milestone on <https://github.com/pmd/pmd/milestones>. The following snippet will
-create the numbers, that can be attached to the release notes as a last section. Note: It uses part of the
-above code snippet (e.g. NEW_VERSION, MILESTONE, DEPENDENCIES_COUNT):
+Make sure, there is such a milestone on <https://github.com/pmd/pmd/milestones>.
+This section is updated automatically by `.ci/tools/release-notes-generate.sh` as well.
 
-```shell
-LAST_VERSION=7.1.0
-NEW_VERSION_COMMITISH=HEAD
-STATS_CLOSED_ISSUES=$(echo "$MILESTONE_JSON" | jq .closed_issues)
+Note: the call to "release-notes-generate.sh" is also integrated into `do-release.sh`.
 
-echo "### Stats"
-echo "* $(git log pmd_releases/${LAST_VERSION}..${NEW_VERSION_COMMITISH} --oneline --no-merges |wc -l) commits"
-echo "* $(($STATS_CLOSED_ISSUES - $DEPENDENCIES_COUNT)) closed tickets & PRs"
-echo "* Days since last release: $(( ( $(date +%s) - $(git log --max-count=1 --format="%at" pmd_releases/${LAST_VERSION}) ) / 86400))"
-```
-
-Note: both shell snippets are also integrated into `do-release.sh`.
-
-Check in all (version) changes to branch master or any other branch, from which the release takes place:
+Check in all (version) changes to branch main or any other branch, from which the release takes place:
 
     $ git commit -a -m "Prepare pmd release <version>"
     $ git push
@@ -180,7 +163,7 @@ NEW_RELEASE_NOTES=$(bundle exec docs/render_release_notes.rb docs/pages/release_
 cat > "../pmd.github.io/${RELEASE_NOTES_POST}" <<EOF
 ```
 
-Check in all (version, blog post) changes to branch master:
+Check in all (version, blog post) changes to branch main:
 
     $ git commit -a -m "Prepare pmd release <version>"
     $ git push
@@ -259,7 +242,7 @@ Here is, what happens:
     under <https://pmd.sourceforge.io/archive.phtml>.
 
 The release on GitHub Actions currently takes about 30-45 minutes. Once this is done, you
-can proceed with releasing pmd designer, see <https://github.com/pmd/pmd-designer/blob/master/releasing.md>.
+can proceed with releasing pmd designer, see <https://github.com/pmd/pmd-designer/blob/main/releasing.md>.
 Make sure to release the version, you have used earlier for the property `pmd-designer.version`.
 
 Once the pmd-designer release is done, you can proceed with part 2. This is simply triggering manually
@@ -363,7 +346,14 @@ This is a {{ site.pmd.release_type }} release.
 
 ### 🚨 API Changes
 
-### ✨ External Contributions
+### ✨ Merged pull requests
+<!-- content will be automatically generated, see /do-release.sh -->
+
+### 📦 Dependency updates
+<!-- content will be automatically generated, see /do-release.sh -->
+
+### 📈 Stats
+<!-- content will be automatically generated, see /do-release.sh -->
 
 {% endtocmaker %}
 
@@ -374,7 +364,7 @@ This is a {{ site.pmd.release_type }} release.
 Finally, commit and push the changes:
 
     $ git commit -m "Prepare next development version"
-    $ git push origin master
+    $ git push origin main
 
 
 ## Branches
@@ -382,7 +372,7 @@ Finally, commit and push the changes:
 ### Merging
 
 If the release was done on a maintenance branch, such as `pmd/5.4.x`, then this branch should be
-merged into the next "higher" branches, such as `pmd/5.5.x` and `master`.
+merged into the next "higher" branches, such as `pmd/5.5.x` and `main`.
 
 This ensures, that all fixes done on the maintenance branch, finally end up in the other branches.
 In theory, the fixes should already be there, but you never now.
@@ -392,7 +382,7 @@ In theory, the fixes should already be there, but you never now.
 
 If releases from multiple branches are being done, the order matters. You should start from the "oldest" branch,
 e.g. `pmd/5.4.x`, release from there. Then merge (see above) into the next branch, e.g. `pmd/5.5.x` and release
-from there. Then merge into the `master` branch and release from there. This way, the last release done, becomes
+from there. Then merge into the `main` branch and release from there. This way, the last release done, becomes
 automatically the latest release on <https://docs.pmd-code.org/latest/> and on sourceforge.
 
 

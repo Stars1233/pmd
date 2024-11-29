@@ -5,6 +5,357 @@ permalink: pmd_release_notes_old.html
 
 Previous versions of PMD can be downloaded here: [Releases - pmd/pmd (GitHub)](https://github.com/pmd/pmd/releases)
 
+## 25-October-2024 - 7.7.0
+
+The PMD team is pleased to announce PMD 7.7.0.
+
+This is a minor release.
+
+### Table Of Contents
+
+* [🚀 New and noteworthy](#new-and-noteworthy)
+    * [CPD can now ignore literals and identifiers in C++ code](#cpd-can-now-ignore-literals-and-identifiers-in-c-code)
+* [🌟 Rule Changes](#rule-changes)
+    * [Changed Rules](#changed-rules)
+    * [Renamed Rules](#renamed-rules)
+* [🐛 Fixed Issues](#fixed-issues)
+* [🚨 API Changes](#api-changes)
+* [✨ Merged pull requests](#merged-pull-requests)
+* [📦 Dependency updates](#dependency-updates)
+* [📈 Stats](#stats)
+
+### 🚀 New and noteworthy
+
+#### CPD can now ignore literals and identifiers in C++ code
+
+When searching for duplicated code in C++ differences in literals or identifiers can be
+ignored now (like in Java). This can be enabled via the command line options `--ignore-literal`
+and `--ignore-identifiers`.  
+See [PR #5040](https://github.com/pmd/pmd/pull/5040) for details.
+
+### 🌟 Rule Changes
+
+#### Changed Rules
+* [`SwitchStmtsShouldHaveDefault`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#switchstmtsshouldhavedefault) (Java Best Practices) doesn't report empty switch statements anymore.
+  To detect these, use [`EmptyControlStatement`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_codestyle.html#emptycontrolstatement).
+* [`UnitTestShouldUseAfterAnnotation`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestshoulduseafterannotation) (Java Best Practices) now also considers JUnit 5 and TestNG tests.
+* [`UnitTestShouldUseBeforeAnnotation`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestshouldusebeforeannotation) (Java Best Practices) now also considers JUnit 5 and TestNG tests.
+* [`TooFewBranchesForSwitch`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_performance.html#toofewbranchesforswitch) (Java Performance) doesn't report empty switches anymore.
+  To detect these, use [`EmptyControlStatement`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_codestyle.html#emptycontrolstatement).
+
+#### Renamed Rules
+* Several rules for unit testing have been renamed to better reflect their actual scope. Lots of them were called
+  after JUnit / JUnit 4, even when they applied to JUnit 5 and / or TestNG.
+  * [`UnitTestAssertionsShouldIncludeMessage`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestassertionsshouldincludemessage) (Java Best Practices) has been renamed from `JUnitAssertionsShouldIncludeMessage`.
+  * [`UnitTestContainsTooManyAsserts`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestcontainstoomanyasserts) (Java Best Practices) has been renamed from `JUnitTestContainsTooManyAsserts`.
+  * [`UnitTestShouldIncludeAssert`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestshouldincludeassert) (Java Best Practices) has been renamed from `JUnitTestsShouldIncludeAssert`.
+  * [`UnitTestShouldUseAfterAnnotation`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestshoulduseafterannotation) (Java Best Practices) has been renamed from `JUnit4TestShouldUseAfterAnnotation`.
+  * [`UnitTestShouldUseBeforeAnnotation`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestshouldusebeforeannotation) (Java Best Practices) has been renamed from `JUnit4TestShouldUseBeforeAnnotation`.
+  * [`UnitTestShouldUseTestAnnotation`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestshouldusetestannotation) (Java Best Practices) has been renamed from `JUnit4TestShouldUseTestAnnotation`.
+* Several rules about switch statements and switch expression have been renamed, as they apply both to Switch Statements
+  and to Switch Expressions:
+  * [`DefaultLabelNotLastInSwitch`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#defaultlabelnotlastinswitch) (Java Best Practices) has been renamed from `DefaultLabelNotLastInSwitchStmt`.
+  * [`NonCaseLabelInSwitch`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_errorprone.html#noncaselabelinswitch) (Java Error Prone) has been renamed from `NonCaseLabelInSwitchStatement`.
+  * [`TooFewBranchesForSwitch`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_performance.html#toofewbranchesforswitch) (Java Performance) has been renamed from `TooFewBranchesForASwitchStatement`.
+  * [`NonExhaustiveSwitch`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#nonexhaustiveswitch) (Java Best Practices) has been renamed from `SwitchStmtsShouldHaveDefault`.
+
+The old rule names still work but are deprecated.
+
+### 🐛 Fixed Issues
+* apex-performance
+  * [#5270](https://github.com/pmd/pmd/issues/5270): \[apex] AvoidNonRestrictiveQueries when LIMIT is followed by bind expression
+* java
+  * [#4532](https://github.com/pmd/pmd/issues/4532): \[java] Rule misnomer for JUnit* rules
+  * [#5261](https://github.com/pmd/pmd/issues/5261): \[java] Record patterns with empty deconstructor lists lead to NPE
+* java-bestpractices
+  * [#4286](https://github.com/pmd/pmd/issues/4286): \[java] Rename rule SwitchStmtsShouldHaveDefault to NonExhaustiveSwitch
+  * [#4813](https://github.com/pmd/pmd/issues/4813): \[java] SwitchStmtsShouldHaveDefault false positive with pattern matching
+* java-codestyle
+  * [#5253](https://github.com/pmd/pmd/issues/5253): \[java] BooleanGetMethodName: False-negatives with `Boolean` wrapper
+* java-design
+  * [#5030](https://github.com/pmd/pmd/issues/5030): \[java] SwitchDensity false positive with pattern matching
+* java-errorprone
+  * [#3362](https://github.com/pmd/pmd/issues/3362): \[java] ImplicitSwitchFallThrough should consider switch expressions
+  * [#5067](https://github.com/pmd/pmd/issues/5067): \[java] CloseResource: False positive for FileSystems.getDefault()
+  * [#5244](https://github.com/pmd/pmd/issues/5244): \[java] UselessOperationOnImmutable should detect java.time types
+  * [#5257](https://github.com/pmd/pmd/issues/5257): \[java] NonCaseLabelInSwitch should consider switch expressions
+* java-performance
+  * [#5249](https://github.com/pmd/pmd/issues/5249): \[java] TooFewBranchesForASwitchStatement false positive for Pattern Matching
+  * [#5250](https://github.com/pmd/pmd/issues/5250): \[java] TooFewBranchesForASwitchStatement should consider Switch Expressions
+
+### 🚨 API Changes
+* java-bestpractices
+  * The old rule name `JUnit4TestShouldUseAfterAnnotation` has been deprecated. Use the new name [`UnitTestShouldUseAfterAnnotation`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestshoulduseafterannotation) instead.
+  * The old rule name `JUnit4TestShouldUseBeforeAnnotation` has been deprecated. Use the new name [`UnitTestShouldUseBeforeAnnotation`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestshouldusebeforeannotation) instead.
+  * The old rule name `JUnit4TestShouldUseTestAnnotation` has been deprecated. Use the new name [`UnitTestShouldUseTestAnnotation`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestshouldusetestannotation) instead.
+  * The old rule name `JUnitAssertionsShouldIncludeMessage` has been deprecated. Use the new name [`UnitTestAssertionsShouldIncludeMessage`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestassertionsshouldincludemessage) instead.
+  * The old rule name `JUnitTestContainsTooManyAsserts` has been deprecated. Use the new name [`UnitTestContainsTooManyAsserts`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestcontainstoomanyasserts) instead.
+  * The old rule name `JUnitTestsShouldIncludeAssert` has been deprecated. Use the new name [`UnitTestShouldIncludeAssert`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#unittestshouldincludeassert) instead.
+  * The old rule name `DefaultLabelNotLastInSwitchStmt` has been deprecated. Use the new name [`DefaultLabelNotLastInSwitch`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#defaultlabelnotlastinswitch) instead.
+  * The old rule name `SwitchStmtsShouldHaveDefault` has been deprecated. USe the new name [`NonExhaustiveSwitch`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_bestpractices.html#nonexhaustiveswitch) instead.
+* java-errorprone
+  * The old rule name  `NonCaseLabelInSwitchStatement` has been deprecated. Use the new name [`NonCaseLabelInSwitch`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_errorprone.html#noncaselabelinswitch) instead.
+* java-performance
+  * The old rule name `TooFewBranchesForASwitchStatement` has been deprecated. Use the new name [`TooFewBranchesForSwitch`](https://docs.pmd-code.org/pmd-doc-7.7.0/pmd_rules_java_performance.html#toofewbranchesforswitch) instead.
+
+### ✨ Merged pull requests
+* [#4965](https://github.com/pmd/pmd/pull/4965): Fix #4532: \[java] Rename JUnit rules with overly restrictive names - [Juan Martín Sotuyo Dodero](https://github.com/jsotuyod) (@jsotuyod)
+* [#5040](https://github.com/pmd/pmd/pull/5040): \[cpp] Ignore literals and ignore identifiers capability to C++ CPD - [Jakub Dupak](https://github.com/jdupak) (@jdupak)
+* [#5225](https://github.com/pmd/pmd/pull/5225): Fix #5067: \[java] CloseResource: False positive for FileSystems.getDefault() - [Lukas Gräf](https://github.com/lukasgraef) (@lukasgraef)
+* [#5241](https://github.com/pmd/pmd/pull/5241): Ignore javacc code in coverage report - [Juan Martín Sotuyo Dodero](https://github.com/jsotuyod) (@jsotuyod)
+* [#5245](https://github.com/pmd/pmd/pull/5245): \[java] Improve UnitTestShouldUse{After,Before}Annotation rules to support JUnit5 and TestNG - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5247](https://github.com/pmd/pmd/pull/5247): Fix #5030: \[java] SwitchDensity false positive with pattern matching - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5248](https://github.com/pmd/pmd/pull/5248): Fix #3362: \[java] ImplicitSwitchFallThrough should consider switch expressions - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5251](https://github.com/pmd/pmd/pull/5251): Fix #5249 and #5250: \[java] TooFewBranchesForSwitch ignore pattern matching and support switch expressions - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5252](https://github.com/pmd/pmd/pull/5252): Fix #4813: \[java] SwitchStmtsShouldHaveDefault false positive with pattern matching - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5255](https://github.com/pmd/pmd/pull/5255): \[java] Rename rule DefaultLabelNotLastInSwitch - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5256](https://github.com/pmd/pmd/pull/5256): Fix #5257: \[java] NonCaseLabelInSwitch - support switch expressions - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5258](https://github.com/pmd/pmd/pull/5258): Ignore generated antlr classes in coverage reports - [Juan Martín Sotuyo Dodero](https://github.com/jsotuyod) (@jsotuyod)
+* [#5264](https://github.com/pmd/pmd/pull/5264): Fix #5261: \[java] Fix NPE with empty pattern list - [Clément Fournier](https://github.com/oowekyala) (@oowekyala)
+* [#5267](https://github.com/pmd/pmd/pull/5267): \[java] Rename rule SwitchStmtsShouldHaveDefault to NonExhaustiveSwitch - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5269](https://github.com/pmd/pmd/pull/5269): Fix #5253: \[java] Support Boolean wrapper class for BooleanGetMethodName rule - [Aryant Tripathi](https://github.com/Aryant-Tripathi) (@Aryant-Tripathi)
+* [#5273](https://github.com/pmd/pmd/pull/5273): Fix #5270: \[apex] AvoidNonRestrictiveQueries: Fix regex for detecting LIMIT clause - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5275](https://github.com/pmd/pmd/pull/5275): Use plugin-classpath to simplify javacc-wrapper.xml - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5278](https://github.com/pmd/pmd/pull/5278): \[java] CouplingBetweenObjects: improve violation message - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5279](https://github.com/pmd/pmd/pull/5279): Fix #5244: \[java] UselessOperationOnImmutable: consider java.time.* types - [Andreas Dangel](https://github.com/adangel) (@adangel)
+
+### 📦 Dependency updates
+* [#5234](https://github.com/pmd/pmd/issues/5234): Bump com.google.protobuf:protobuf-java from 3.25.3 to 4.28.2
+* [#5274](https://github.com/pmd/pmd/issues/5274): Bump org.junit from 5.8.2 to 5.11.2
+* [#5276](https://github.com/pmd/pmd/issues/5276): Bump org.checkerframework:checker-qual from 2.11.1 to 3.48.1
+* [#5280](https://github.com/pmd/pmd/issues/5280): Bump danger from 9.5.0 to 9.5.1 in the all-gems group across 1 directory
+* [#5281](https://github.com/pmd/pmd/issues/5281): Bump org.scala-lang:scala-reflect from 2.13.13 to 2.13.15
+
+### 📈 Stats
+* 98 commits
+* 32 closed tickets & PRs
+* Days since last release: 27
+
+## 27-September-2024 - 7.6.0
+
+The PMD team is pleased to announce PMD 7.6.0.
+
+This is a minor release.
+
+### Table Of Contents
+
+* [🚀 New and noteworthy](#new-and-noteworthy)
+    * [New Git default branch - "main"](#new-git-default-branch---main)
+* [🐛 Fixed Issues](#fixed-issues)
+* [🚨 API Changes](#api-changes)
+* [✨ Merged pull requests](#merged-pull-requests)
+* [📦 Dependency updates](#dependency-updates)
+* [📈 Stats](#stats)
+
+### 🚀 New and noteworthy
+
+#### New Git default branch - "main"
+
+We are joining the Git community and updating "master" to "main". Using the term "master" for the main
+development branch can be offensive to some people. Existing versions of Git have been always capable of
+working with any branch name and since 2.28.0 (July 2020) the default initial branch is configurable
+(`init.defaultBranch`). Since October 2020, the default branch for new repositories on GitHub
+is "main". Finally, PMD will also use this new name for the main branch in all our own repositories.
+
+Why "main"? PMD uses a very simple branching model - pull requests with feature branches and one main development
+branch, from which releases are created. That's why "main" is currently the best fitting name.
+
+More information:
+- <https://sfconservancy.org/news/2020/jun/23/gitbranchname/>
+- <https://github.blog/changelog/2020-10-01-the-default-branch-for-newly-created-repositories-is-now-main/>
+
+What changes?
+- We change the default branch on GitHub, so that pull requests are automatically created against `main` from
+  now on.
+- If you have already a local clone of PMD's repository, you'll need to rename the old master branch locally:
+  ```
+  git branch --move master main
+  git fetch origin
+  git branch --set-upstream-to=origin/main main
+  git remote set-head origin --auto
+  ```
+  
+  More info:
+  <https://git-scm.com/book/en/v2/Git-Branching-Branch-Management#_changing_master> and
+  <https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/renaming-a-branch#updating-a-local-clone-after-a-branch-name-changes>
+- If you created a fork on GitHub, you'll need to change the default branch in your fork to `main` as
+  well (Settings > Default Branch).
+- Some time after this release, we'll delete the old master branch on GitHub. Then only `main` can be used.
+- This change is expanded to the other PMD repositories as well, e.g. pmd-designer and pmd-regression-tester.
+
+### 🐛 Fixed Issues
+* apex
+  * [#5138](https://github.com/pmd/pmd/issues/5138): \[apex] Various false-negatives since 7.3.0 when using triggers
+    (ApexCRUDViolation, CognitiveComplexity, OperationWithLimitsInLoop)
+  * [#5163](https://github.com/pmd/pmd/issues/5163): \[apex] Parser error when using toLabel in SOSL query
+  * [#5182](https://github.com/pmd/pmd/issues/5182): \[apex] Parser error when using GROUPING in a SOQL query
+  * [#5218](https://github.com/pmd/pmd/issues/5218): \[apex] Parser error when using nested subqueries in SOQL
+  * [#5228](https://github.com/pmd/pmd/issues/5228): \[apex] Parser error when using convertCurrency() in SOQL
+* core
+  * [#5059](https://github.com/pmd/pmd/issues/5059): \[core] xml output doesn't escape CDATA inside its own CDATA
+  * [#5201](https://github.com/pmd/pmd/issues/5201): \[core] PMD sarif schema file points to nonexistent location
+  * [#5222](https://github.com/pmd/pmd/issues/5222): \[core] RuleReference/RuleSetWriter don't handle changed default property values correctly
+  * [#5229](https://github.com/pmd/pmd/issues/5229): \[doc] CLI flag `--show-suppressed` needs to mention xml, html, summaryhtml
+* java
+  * [#5190](https://github.com/pmd/pmd/issues/5190): \[java] NPE in type inference
+* java-codestyle
+  * [#5046](https://github.com/pmd/pmd/issues/5046): \[java] LocalVariableCouldBeFinal false positive with try/catch
+* java-errorprone
+  * [#5068](https://github.com/pmd/pmd/issues/5068): \[java] MissingStaticMethodInNonInstantiatableClass: false positive with builder pattern
+  * [#5207](https://github.com/pmd/pmd/issues/5207): \[java] CheckSkipResult: false positve for a private method `void skip(int)` in a subclass of FilterInputStream
+
+### 🚨 API Changes
+
+No changes.
+
+### ✨ Merged pull requests
+* [#5186](https://github.com/pmd/pmd/pull/5186): \[java] Cleanup things about implicit classes - [Clément Fournier](https://github.com/oowekyala) (@oowekyala)
+* [#5188](https://github.com/pmd/pmd/pull/5188): \[apex] Use new apex-parser 4.2.0 - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5191](https://github.com/pmd/pmd/pull/5191): \[java] Fix #5046 - FPs in LocalVariableCouldBeFinal - [Clément Fournier](https://github.com/oowekyala) (@oowekyala)
+* [#5192](https://github.com/pmd/pmd/pull/5192): \[java] Fix #5190 - NPE in type inference caused by null type - [Clément Fournier](https://github.com/oowekyala) (@oowekyala)
+* [#5195](https://github.com/pmd/pmd/pull/5195): \[apex] Fix various FNs when using triggers - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5202](https://github.com/pmd/pmd/pull/5202): \[core] Sarif format: refer to schemastore.org - [David Schach](https://github.com/dschach) (@dschach)
+* [#5208](https://github.com/pmd/pmd/pull/5208): \[doc] Added Codety to "Tools / Integrations" - [Tony](https://github.com/random1223) (@random1223)
+* [#5210](https://github.com/pmd/pmd/pull/5210): \[core] Fix PMD's XMLRenderer to escape CDATA - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5211](https://github.com/pmd/pmd/pull/5211): Change branch master to main - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5212](https://github.com/pmd/pmd/pull/5212): \[java] Adjust signature matching in CheckSkipResultRule - [Juan Martín Sotuyo Dodero](https://github.com/jsotuyod) (@jsotuyod)
+* [#5223](https://github.com/pmd/pmd/pull/5223): \[core] Fix RuleReference / RuleSetWriter handling of properties - [Andreas Dangel](https://github.com/adangel) (@adangel)
+* [#5224](https://github.com/pmd/pmd/pull/5224): \[java] Fix #5068: Class incorrectly identified as non-instantiatable - [Lukas Gräf](https://github.com/lukasgraef) (@lukasgraef)
+* [#5230](https://github.com/pmd/pmd/pull/5230): \[doc] Documentation update for --show-suppressed flag - [David Schach](https://github.com/dschach) (@dschach)
+* [#5237](https://github.com/pmd/pmd/pull/5237): \[apex] Support convertCurrency() in SOQL/SOSL - [Andreas Dangel](https://github.com/adangel) (@adangel)
+
+### 📦 Dependency updates
+* [#5185](https://github.com/pmd/pmd/issues/5185): Bump checkstyle from 10.14.0 to 10.18.1
+* [#5187](https://github.com/pmd/pmd/issues/5187): Bump org.apache.maven.plugins:maven-install-plugin from 3.1.1 to 3.1.3
+* [#5199](https://github.com/pmd/pmd/issues/5199): Bump org.apache.maven.plugins:maven-deploy-plugin from 3.1.1 to 3.1.3
+* [#5216](https://github.com/pmd/pmd/issues/5216): Bump com.github.siom79.japicmp:japicmp-maven-plugin from 0.20.0 to 0.23.0
+* [#5226](https://github.com/pmd/pmd/issues/5226): Bump rouge from 4.3.0 to 4.4.0 in the all-gems group across 1 directory
+* [#5227](https://github.com/pmd/pmd/issues/5227): Bump com.google.code.gson:gson from 2.10.1 to 2.11.0
+* [#5232](https://github.com/pmd/pmd/issues/5232): Bump com.google.protobuf:protobuf-java from 3.25.3 to 3.25.5
+* [#5233](https://github.com/pmd/pmd/issues/5233): Bump webrick from 1.8.1 to 1.8.2 in /docs
+
+### 📈 Stats
+* 60 commits
+* 27 closed tickets & PRs
+* Days since last release: 27
+
+## 30-August-2024 - 7.5.0
+
+The PMD team is pleased to announce PMD 7.5.0.
+
+This is a minor release.
+
+### Table Of Contents
+
+* [🚀 New: Java 23 Support](#new-java-23-support)
+* [🌟 New Rules](#new-rules)
+* [🐛 Fixed Issues](#fixed-issues)
+* [🚨 API Changes](#api-changes)
+    * [Deprecations](#deprecations)
+    * [Experimental](#experimental)
+* [✨ External Contributions](#external-contributions)
+* [📦 Dependency updates](#dependency-updates)
+* [📈 Stats](#stats)
+
+### 🚀 New: Java 23 Support
+This release of PMD brings support for Java 23. There are no new standard language features,
+but a couple of preview language features:
+
+* [JEP 455: Primitive Types in Patterns, instanceof, and switch (Preview)](https://openjdk.org/jeps/455)
+* [JEP 476: Module Import Declarations (Preview)](https://openjdk.org/jeps/476)
+* [JEP 477: Implicitly Declared Classes and Instance Main Methods (Third Preview)](https://openjdk.org/jeps/477)
+* [JEP 482: Flexible Constructor Bodies (Second Preview)](https://openjdk.org/jeps/482)
+
+Note that String Templates (introduced as preview in Java 21 and 22) are not supported anymore in Java 23,
+see [JDK-8329949](https://bugs.openjdk.org/browse/JDK-8329949) for details.
+
+In order to analyze a project with PMD that uses these preview language features,
+you'll need to enable it via the environment variable `PMD_JAVA_OPTS` and select the new language
+version `23-preview`:
+
+    export PMD_JAVA_OPTS=--enable-preview
+    pmd check --use-version java-23-preview ...
+
+Note: Support for Java 21 preview language features have been removed. The version "21-preview"
+are no longer available.
+
+### 🌟 New Rules
+* The new Java rule [`AvoidSynchronizedStatement`](https://docs.pmd-code.org/pmd-doc-7.5.0/pmd_rules_java_multithreading.html#avoidsynchronizedstatement) finds synchronization blocks that
+  could cause performance issues with virtual threads due to pinning.
+* The new JavaScript rule [`AvoidConsoleStatements`](https://docs.pmd-code.org/pmd-doc-7.5.0/pmd_rules_ecmascript_performance.html#avoidconsolestatements) finds any function calls
+  on the Console API (e.g. `console.log`). Using these in production code might negatively impact performance.
+
+### 🐛 Fixed Issues
+* apex-performance
+  * [#5139](https://github.com/pmd/pmd/issues/5139): \[apex] OperationWithHighCostInLoop: false negative for triggers
+* java
+  * [#5062](https://github.com/pmd/pmd/issues/5062): \[java] Support Java 23
+  * [#5167](https://github.com/pmd/pmd/issues/5167): \[java] java.lang.IllegalArgumentException: \<?\> cannot be a wildcard bound
+* java-bestpractices
+  * [#3602](https://github.com/pmd/pmd/issues/3602): \[java] GuardLogStatement: False positive when compile-time constant is created from external constants
+  * [#4731](https://github.com/pmd/pmd/issues/4731): \[java] GuardLogStatement: Documentation is unclear why getters are flagged
+  * [#5145](https://github.com/pmd/pmd/issues/5145): \[java] UnusedPrivateMethod: False positive with method calls inside lambda
+  * [#5151](https://github.com/pmd/pmd/issues/5151): \[java] GuardLogStatement: Should not need to guard parameterized log messages where the replacement arg is a constant from another class
+  * [#5152](https://github.com/pmd/pmd/issues/5152): \[java] GuardLogStatement: Should not need to guard parameterized log messages where the replacement arg is "this"
+  * [#5153](https://github.com/pmd/pmd/issues/5153): \[java] GuardLogStatement: Should not need to guard parameterized log messages where the replacement arg is an array element
+* java-design
+  * [#5048](https://github.com/pmd/pmd/issues/5084): \[java] CognitiveComplexity: Exception when using Map.of()
+  * [#5162](https://github.com/pmd/pmd/issues/5162): \[java] SingularField: False-positive when preceded by synchronized block
+* java-multithreading
+  * [#5175](https://github.com/pmd/pmd/issues/5175): \[java] Update AvoidSynchronizedAtMethodLevel message to mention ReentrantLock, new rule AvoidSynchronizedStatement
+* javascript-performance
+  * [#5105](https://github.com/pmd/pmd/issues/5105): \[javascript] Prohibit any console methods
+* plsql
+  * [#5125](https://github.com/pmd/pmd/pull/5125): \[plsql] Improve merge statement (order of merge insert/update flexible, allow prefixes in column names)
+* plsql-bestpractices
+  * [#5132](https://github.com/pmd/pmd/issues/5132): \[plsql] TomKytesDespair: XPathException for more complex exception handler
+
+### 🚨 API Changes
+#### Deprecations
+* pmd-jsp
+  * <a href="https://docs.pmd-code.org/apidocs/pmd-jsp/7.5.0/net/sourceforge/pmd/lang/jsp/ast/JspParserImpl.html#"><code>JspParserImpl</code></a> is deprecated now. It should have been package-private
+    because this is an implementation class that should not be used directly.
+* pmd-plsql
+  * <a href="https://docs.pmd-code.org/apidocs/pmd-plsql/7.5.0/net/sourceforge/pmd/lang/plsql/ast/PLSQLParserImpl.html#MergeUpdateClausePrefix()"><code>MergeUpdateClausePrefix</code></a> is deprecated. This production is
+    not used anymore and will be removed. Note: The whole parser implementation class has been deprecated since 7.3.0,
+    as it is supposed to be internalized.
+* pmd-velocity
+  * <a href="https://docs.pmd-code.org/apidocs/pmd-velocity/7.5.0/net/sourceforge/pmd/lang/velocity/ast/VtlParserImpl.html#"><code>VtlParserImpl</code></a> is deprecated now. It should have been package-private
+    because this is an implementation class that should not be used directly.
+* pmd-visualforce
+  * <a href="https://docs.pmd-code.org/apidocs/pmd-visualforce/7.5.0/net/sourceforge/pmd/lang/visualforce/ast/VfParserImpl.html#"><code>VfParserImpl</code></a> is deprecated now. It should have been package-private
+    because this is an implementation class that should not be used directly.
+
+#### Experimental
+* pmd-java
+  * Renamed `isUnnamedClass()` to <a href="https://docs.pmd-code.org/apidocs/pmd-java/7.5.0/net/sourceforge/pmd/lang/java/ast/ASTCompilationUnit.html#isSimpleCompilationUnit()"><code>ASTCompilationUnit#isSimpleCompilationUnit</code></a>
+  * <a href="https://docs.pmd-code.org/apidocs/pmd-java/7.5.0/net/sourceforge/pmd/lang/java/ast/ASTImplicitClassDeclaration.html#"><code>ASTImplicitClassDeclaration</code></a>
+  * <a href="https://docs.pmd-code.org/apidocs/pmd-java/7.5.0/net/sourceforge/pmd/lang/java/ast/ASTImportDeclaration.html#isModuleImport()"><code>ASTImportDeclaration#isModuleImport</code></a>
+  * <a href="https://docs.pmd-code.org/apidocs/pmd-java/7.5.0/net/sourceforge/pmd/lang/java/ast/JavaVisitorBase.html#visit(net.sourceforge.pmd.lang.java.ast.ASTImplicitClassDeclaration,P)"><code>JavaVisitorBase#visit(ASTImplicitClassDeclaration, P)</code></a>
+
+### ✨ External Contributions
+* [#5125](https://github.com/pmd/pmd/pull/5125): \[plsql] Improve merge statement (order of merge insert/update flexible, allow prefixes in column names) - [Arjen Duursma](https://github.com/duursma) (@duursma)
+* [#5175](https://github.com/pmd/pmd/pull/5175): \[java] Update AvoidSynchronizedAtMethodLevel message to mention ReentrantLock, new rule AvoidSynchronizedStatement - [Chas Honton](https://github.com/chonton) (@chonton)
+
+### 📦 Dependency updates
+* [#5100](https://github.com/pmd/pmd/issues/5100): Enable Dependabot
+* [#5141](https://github.com/pmd/pmd/issues/5141): Bump org.apache.maven.plugins:maven-checkstyle-plugin from 3.3.1 to 3.4.0
+* [#5142](https://github.com/pmd/pmd/issues/5142): Bump org.apache.maven.plugins:maven-compiler-plugin from 3.12.1 to 3.13.0
+* [#5144](https://github.com/pmd/pmd/issues/5144): Bump org.codehaus.mojo:versions-maven-plugin from 2.16.2 to 2.17.1
+* [#5148](https://github.com/pmd/pmd/issues/5148): Bump org.apache.commons:commons-text from 1.11.0 to 1.12.0
+* [#5149](https://github.com/pmd/pmd/issues/5149): Bump org.apache.maven.plugins:maven-site-plugin from 4.0.0-M13 to 4.0.0-M16
+* [#5160](https://github.com/pmd/pmd/issues/5160): Bump org.pcollections:pcollections from 3.2.0 to 4.0.2
+* [#5161](https://github.com/pmd/pmd/issues/5161): Bump danger from 9.4.3 to 9.5.0 in the all-gems group across 1 directory
+* [#5164](https://github.com/pmd/pmd/issues/5164): Bump org.apache.maven.plugins:maven-dependency-plugin from 3.6.1 to 3.7.1
+* [#5165](https://github.com/pmd/pmd/issues/5165): Bump the all-gems group across 1 directory with 2 updates
+* [#5171](https://github.com/pmd/pmd/issues/5171): Bump net.bytebuddy:byte-buddy-agent from 1.14.12 to 1.14.19
+* [#5180](https://github.com/pmd/pmd/issues/5180): Bump net.sf.saxon:Saxon-HE from 12.4 to 12.5
+
+### 📈 Stats
+* 87 commits
+* 25 closed tickets & PRs
+* Days since last release: 35
+
 ## 26-July-2024 - 7.4.0
 
 The PMD team is pleased to announce PMD 7.4.0.
@@ -7518,7 +7869,7 @@ conduct.
 Please note that this project is released with a Contributor Code of Conduct.
 By participating in this project you agree to abide by its terms.
 
-You can find the code of conduct in the file [code_of_conduct.md](https://github.com/pmd/pmd/blob/master/code_of_conduct.md)
+You can find the code of conduct in the file [code_of_conduct.md](https://github.com/pmd/pmd/blob/main/code_of_conduct.md)
 in our repository.
 
 #### Performance improvements for XPath 2.0 rules
